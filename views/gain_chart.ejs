@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Gain Chart - Crypto Exchange With Websockets</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/new/style.css">
+    <link rel="stylesheet" href="https://ussext.jjonlinesystems.com/zahid/chat_system/asset/css/model.css">
+    <!-- Font Awesome File -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://ussext.jjonlinesystems.com/zahid/chat_system/asset/js/model.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.js"></script>
+    <script src="/js/moment.js"></script>
+</head>
+
+<body style="height:100%; background-color:#FFFFFF; background-image: none;">
+
+<div class="container-fluid">
+    <!-- Conversation Start -->
+    <div class="col-sm-12" style="height: auto;">
+        <table class="table" id="tbl-gain-chart">
+            <thead>
+            <tr style="background-color: #00DFDF;">
+                <th scope="col" style="text-align: center;">MINUTE</th>
+                <th scope="col">1%</th>
+                <th scope="col">2%</th>
+                <th scope="col">3%</th>
+                <th scope="col">4%</th>
+                <th scope="col">5%</th>
+                <th scope="col">6%</th>
+                <th scope="col">7%</th>
+                <th scope="col">8%</th>
+                <th scope="col">9%</th>
+                <th scope="col">10%</th>
+                <th scope="col">11%</th>
+                <th scope="col">12%</th>
+                <th scope="col">13%</th>
+                <th scope="col">14%</th>
+                <th scope="col">15%</th>
+                <th scope="col">16%</th>
+                <th scope="col">17%</th>
+                <th scope="col">18%</th>
+                <th scope="col">19%</th>
+                <th scope="col">20%</th>
+            </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="col-md-12" style="height: auto;">
+        <div class="col-sm-4" style="padding-left: 0px; font-weight: bold; font-size: 15px; color: #d9534f;">
+            <span id="span_market_gain">MARKET GAIN</span>
+        </div>
+    </div>
+    <div class="col-sm-12" style="height: auto;" id="div-gain-chart-stats1">
+        <table class="table" id="tbl-gain-chart-stats1">
+            <thead>
+            <tr style="background-color: #00DFDF;">
+                <th scope="col">Sr #</th>
+                <th scope="col">Market</th>
+                <th scope="col">Currency</th>
+                <th scope="col">Current Rate</th>
+                <th scope="col">Start Rate</th>
+                <th scope="col">End Rate</th>
+                <th scope="col">Gain</th>
+                <th scope="col">Gain %</th>
+            </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="col-md-12" style="height: auto;">
+        <div class="col-sm-2" style="padding-left: 0px; font-weight: bold; font-size: 15px; color: #d9534f;">
+            CURRENCY GAIN
+        </div>
+    </div>
+    <div class="col-sm-12" style="height: auto;" id="div-gain-chart-stats2">
+        <table class="table" id="tbl-gain-chart-stats2">
+            <thead>
+            <tr style="background-color: #00DFDF;">
+                <th scope="col">Sr #</th>
+                <th scope="col">Market</th>
+                <th scope="col">Currency</th>
+                <th scope="col">Current Rate</th>
+                <th scope="col">1hr Gain</th>
+                <th scope="col">30min Gain</th>
+                <th scope="col">10m Gain</th>
+                <th scope="col">5m Gain</th>
+                <th scope="col">2m Gain</th>
+                <th scope="col">1m Gain</th>
+            </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+
+
+    <!-- Conversation End -->
+</div>
+
+<!-- App End -->
+<script>
+    $(document).ready(function(){
+
+    });
+</script>
+
+<script src="/js/gain_chart.js"></script>
+
+</body>
+
+</html>

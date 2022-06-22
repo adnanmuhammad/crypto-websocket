@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title> JJMessenger - Private Chat </title>
+    <% include cores/header.ejs %>
+
+    <div class="container">
+        <div class="main">
+
+            <div class="row">
+                <div class="col-md-2">
+                    <input id="user_name" placeholder="Enter user name">
+                    <input type="button" id="btn_login" value="Submit">
+                    <!--<ul id="users"></ul>-->
+                    <div id="users" style="margin-top: 20px;"></div>
+                </div>
+                <div class="col-md-10">
+                    <div id="private-messenger-chat">
+                        <div id="chat-window">
+                            <div id="output"></div>
+                            <div id="feedback"></div>
+                        </div>
+                        <input id="handle" type="hidden" placeholder="Handle" class="chat-input" value="" />
+                        <input id="private_message" type="text" placeholder="Message"  class="chat-input"  />
+                        <button id="btn_send_message" class="chat-send-btn" >Send</button>
+                    </div>
+                </div>
+            </div>
+
+            <!--
+            <input id="user_name" placeholder="Enter user name">
+            <input type="button" id="btn_login" value="Submit">
+            <ul id="users"></ul>
+
+            <input id="private_message" placeholder="Enter message">
+            <input type="button" id="btn_send_message" value="Send">
+            <ul id="messages"></ul>
+            !-->
+
+            <br><br><br>
+
+        </div>
+    </div>
+    <script src="/js/chat.js"></script>
+    <div id="footerbox"></div>
+    <% include cores/footer.ejs %>
