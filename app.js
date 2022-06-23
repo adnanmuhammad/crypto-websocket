@@ -47,11 +47,11 @@ app.use(session({
 
 app.use(
     connection(mysql, {
-        host: '',
-        user: '',
-        password: '',
+        host: 'crypto-exchange.cvcoxaxglrwq.us-east-1.rds.amazonaws.com',
+        user: 'admin',
+        password: 'sVEH0VWtkOgb7LjGc4A2',
         port: 3306, //port mysql
-        database: ''
+        database: 'cryptowebsocket'
     }, 'request')
 );
 
@@ -99,7 +99,7 @@ app.post('/get_all_users', messenger);
 app.post('/get_previous_chat', messenger);
 
 app.get('/gain_chart', messenger);
-
+app.post('/get_detail_charts_data', messenger);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
@@ -141,16 +141,14 @@ var io = socket(server);
 io.on('connection', function(socket) {
     console.log('Made connection', socket.id);
 
-
-
     socket.on('update_gain_chart_data', function(data){
         //socket.broadcast.emit('update_gain_chart_data', data);
         setInterval(intervalFunc, 2000);
     });
 
     socket.on('update_gain_chart_data2', function(data){
-         //setInterval(intervalFunc2, 1000, data);
-        intervalFunc2(data);
+        // Old code, commented
+        //intervalFunc2(data);
     });
 
     function intervalFunc2(data) {
@@ -162,14 +160,6 @@ io.on('connection', function(socket) {
         var percent_value = json_data[0].percent_value;
         var percent_value_max = (percent_value + 1);
         //console.log('time_interval: '+time_interval + ', percent_value: '+percent_value +'<br>');
-
-        /*var sql = "SELECT symbol, MIN(open) AS open, MAX(close) AS close, round((((MAX(close) - MIN(open)) / MIN(open)) * 100),6) AS percent_increase, "+ time_interval +" AS time_interval " +
-                  " FROM crypto_feed " +
-                  " WHERE start_date >= NOW() - INTERVAL "+ time_interval +" MINUTE " +
-                  " AND end_date <= NOW() " +
-                  " GROUP BY symbol " +
-                  " HAVING percent_increase >= "+ percent_value +" AND percent_increase < "+ percent_value_max +" ";
-        */
 
         var sql = " SELECT " +
             " cry_fd.symbol, " +
@@ -291,6 +281,32 @@ io.on('connection', function(socket) {
             "AND end_date <= NOW() " +
             "GROUP BY symbol " +
             " " +
+
+            "UNION ALL " +
+            " " +
+            "SELECT symbol, substring_index(group_concat(open order by id ASC), ',', 1) AS open, substring_index(group_concat(close order by id DESC), ',', 1) AS close, round((((substring_index(group_concat(close order by id DESC), ',', 1) - substring_index(group_concat(open order by id ASC), ',', 1)) / substring_index(group_concat(open order by id ASC), ',', 1)) * 100),6) AS percent_increase, 15 AS time_interval " +
+            "FROM crypto_feed " +
+            "WHERE start_date >= NOW() - INTERVAL 15 MINUTE " +
+            "AND end_date <= NOW() " +
+            "GROUP BY symbol " +
+            " " +
+            "UNION ALL " +
+            " " +
+            "SELECT symbol, substring_index(group_concat(open order by id ASC), ',', 1) AS open, substring_index(group_concat(close order by id DESC), ',', 1) AS close, round((((substring_index(group_concat(close order by id DESC), ',', 1) - substring_index(group_concat(open order by id ASC), ',', 1)) / substring_index(group_concat(open order by id ASC), ',', 1)) * 100),6) AS percent_increase, 30 AS time_interval " +
+            "FROM crypto_feed " +
+            "WHERE start_date >= NOW() - INTERVAL 30 MINUTE " +
+            "AND end_date <= NOW() " +
+            "GROUP BY symbol " +
+            " " +
+            "UNION ALL " +
+            " " +
+            "SELECT symbol, substring_index(group_concat(open order by id ASC), ',', 1) AS open, substring_index(group_concat(close order by id DESC), ',', 1) AS close, round((((substring_index(group_concat(close order by id DESC), ',', 1) - substring_index(group_concat(open order by id ASC), ',', 1)) / substring_index(group_concat(open order by id ASC), ',', 1)) * 100),6) AS percent_increase, 45 AS time_interval " +
+            "FROM crypto_feed " +
+            "WHERE start_date >= NOW() - INTERVAL 45 MINUTE " +
+            "AND end_date <= NOW() " +
+            "GROUP BY symbol " +
+            " " +
+
             "UNION ALL " +
             " " +
             "SELECT symbol, substring_index(group_concat(open order by id ASC), ',', 1) AS open, substring_index(group_concat(close order by id DESC), ',', 1) AS close, round((((substring_index(group_concat(close order by id DESC), ',', 1) - substring_index(group_concat(open order by id ASC), ',', 1)) / substring_index(group_concat(open order by id ASC), ',', 1)) * 100),6) AS percent_increase, 60 AS time_interval " +
@@ -442,6 +458,69 @@ io.on('connection', function(socket) {
                 var counter60_18 = 0;
                 var counter60_19 = 0;
                 var counter60_20 = 0;
+
+                var counter15_1  = 0;
+                var counter15_2  = 0;
+                var counter15_3  = 0;
+                var counter15_4  = 0;
+                var counter15_5  = 0;
+                var counter15_6  = 0;
+                var counter15_7  = 0;
+                var counter15_8  = 0;
+                var counter15_9  = 0;
+                var counter15_10 = 0;
+                var counter15_11 = 0;
+                var counter15_12 = 0;
+                var counter15_13 = 0;
+                var counter15_14 = 0;
+                var counter15_15 = 0;
+                var counter15_16 = 0;
+                var counter15_17 = 0;
+                var counter15_18 = 0;
+                var counter15_19 = 0;
+                var counter15_20 = 0;
+
+                var counter30_1  = 0;
+                var counter30_2  = 0;
+                var counter30_3  = 0;
+                var counter30_4  = 0;
+                var counter30_5  = 0;
+                var counter30_6  = 0;
+                var counter30_7  = 0;
+                var counter30_8  = 0;
+                var counter30_9  = 0;
+                var counter30_10 = 0;
+                var counter30_11 = 0;
+                var counter30_12 = 0;
+                var counter30_13 = 0;
+                var counter30_14 = 0;
+                var counter30_15 = 0;
+                var counter30_16 = 0;
+                var counter30_17 = 0;
+                var counter30_18 = 0;
+                var counter30_19 = 0;
+                var counter30_20 = 0;
+
+                var counter45_1  = 0;
+                var counter45_2  = 0;
+                var counter45_3  = 0;
+                var counter45_4  = 0;
+                var counter45_5  = 0;
+                var counter45_6  = 0;
+                var counter45_7  = 0;
+                var counter45_8  = 0;
+                var counter45_9  = 0;
+                var counter45_10 = 0;
+                var counter45_11 = 0;
+                var counter45_12 = 0;
+                var counter45_13 = 0;
+                var counter45_14 = 0;
+                var counter45_15 = 0;
+                var counter45_16 = 0;
+                var counter45_17 = 0;
+                var counter45_18 = 0;
+                var counter45_19 = 0;
+                var counter45_20 = 0;
                 // =========== To be replaced in future =====================
 
                 for (var i = 0; i < json_data.length; i++){
@@ -709,7 +788,136 @@ io.on('connection', function(socket) {
                         } else if(obj['percent_increase'] >= 20 && obj['percent_increase'] < 21) {
                             counter60_20++;
                         }
+                    } else if(obj['time_interval'] == 15) {
+                        if(obj['percent_increase'] >= 1 && obj['percent_increase'] < 2) {
+                            counter15_1++;
+                        } else if(obj['percent_increase'] >= 2 && obj['percent_increase'] < 3) {
+                            counter15_2++;
+                        } else if(obj['percent_increase'] >= 3 && obj['percent_increase'] < 4) {
+                            counter15_3++;
+                        } else if(obj['percent_increase'] >= 4 && obj['percent_increase'] < 5) {
+                            counter15_4++;
+                        } else if(obj['percent_increase'] >= 5 && obj['percent_increase'] < 6) {
+                            counter15_5++;
+                        } else if(obj['percent_increase'] >= 6 && obj['percent_increase'] < 7) {
+                            counter15_6++;
+                        } else if(obj['percent_increase'] >= 7 && obj['percent_increase'] < 8) {
+                            counter15_7++;
+                        } else if(obj['percent_increase'] >= 8 && obj['percent_increase'] < 9) {
+                            counter15_8++;
+                        } else if(obj['percent_increase'] >= 9 && obj['percent_increase'] < 10) {
+                            counter15_9++;
+                        } else if(obj['percent_increase'] >= 10 && obj['percent_increase'] < 11) {
+                            counter15_10++;
+                        } else if(obj['percent_increase'] >= 11 && obj['percent_increase'] < 12) {
+                            counter15_11++;
+                        } else if(obj['percent_increase'] >= 12 && obj['percent_increase'] < 13) {
+                            counter15_12++;
+                        } else if(obj['percent_increase'] >= 13 && obj['percent_increase'] < 14) {
+                            counter15_13++;
+                        } else if(obj['percent_increase'] >= 14 && obj['percent_increase'] < 15) {
+                            counter15_14++;
+                        } else if(obj['percent_increase'] >= 15 && obj['percent_increase'] < 16) {
+                            counter15_15++;
+                        } else if(obj['percent_increase'] >= 16 && obj['percent_increase'] < 17) {
+                            counter15_16++;
+                        } else if(obj['percent_increase'] >= 17 && obj['percent_increase'] < 18) {
+                            counter15_17++;
+                        } else if(obj['percent_increase'] >= 18 && obj['percent_increase'] < 19) {
+                            counter15_18++;
+                        } else if(obj['percent_increase'] >= 19 && obj['percent_increase'] < 20) {
+                            counter15_19++;
+                        } else if(obj['percent_increase'] >= 20 && obj['percent_increase'] < 21) {
+                            counter15_20++;
+                        }
+                    } else if(obj['time_interval'] == 30) {
+                        if(obj['percent_increase'] >= 1 && obj['percent_increase'] < 2) {
+                            counter30_1++;
+                        } else if(obj['percent_increase'] >= 2 && obj['percent_increase'] < 3) {
+                            counter30_2++;
+                        } else if(obj['percent_increase'] >= 3 && obj['percent_increase'] < 4) {
+                            counter30_3++;
+                        } else if(obj['percent_increase'] >= 4 && obj['percent_increase'] < 5) {
+                            counter30_4++;
+                        } else if(obj['percent_increase'] >= 5 && obj['percent_increase'] < 6) {
+                            counter30_5++;
+                        } else if(obj['percent_increase'] >= 6 && obj['percent_increase'] < 7) {
+                            counter30_6++;
+                        } else if(obj['percent_increase'] >= 7 && obj['percent_increase'] < 8) {
+                            counter30_7++;
+                        } else if(obj['percent_increase'] >= 8 && obj['percent_increase'] < 9) {
+                            counter30_8++;
+                        } else if(obj['percent_increase'] >= 9 && obj['percent_increase'] < 10) {
+                            counter30_9++;
+                        } else if(obj['percent_increase'] >= 10 && obj['percent_increase'] < 11) {
+                            counter30_10++;
+                        } else if(obj['percent_increase'] >= 11 && obj['percent_increase'] < 12) {
+                            counter30_11++;
+                        } else if(obj['percent_increase'] >= 12 && obj['percent_increase'] < 13) {
+                            counter30_12++;
+                        } else if(obj['percent_increase'] >= 13 && obj['percent_increase'] < 14) {
+                            counter30_13++;
+                        } else if(obj['percent_increase'] >= 14 && obj['percent_increase'] < 15) {
+                            counter30_14++;
+                        } else if(obj['percent_increase'] >= 15 && obj['percent_increase'] < 16) {
+                            counter30_15++;
+                        } else if(obj['percent_increase'] >= 16 && obj['percent_increase'] < 17) {
+                            counter30_16++;
+                        } else if(obj['percent_increase'] >= 17 && obj['percent_increase'] < 18) {
+                            counter30_17++;
+                        } else if(obj['percent_increase'] >= 18 && obj['percent_increase'] < 19) {
+                            counter30_18++;
+                        } else if(obj['percent_increase'] >= 19 && obj['percent_increase'] < 20) {
+                            counter30_19++;
+                        } else if(obj['percent_increase'] >= 20 && obj['percent_increase'] < 21) {
+                            counter30_20++;
+                        }
+                    } else if(obj['time_interval'] == 45) {
+                        if(obj['percent_increase'] >= 1 && obj['percent_increase'] < 2) {
+                            counter45_1++;
+                        } else if(obj['percent_increase'] >= 2 && obj['percent_increase'] < 3) {
+                            counter45_2++;
+                        } else if(obj['percent_increase'] >= 3 && obj['percent_increase'] < 4) {
+                            counter45_3++;
+                        } else if(obj['percent_increase'] >= 4 && obj['percent_increase'] < 5) {
+                            counter45_4++;
+                        } else if(obj['percent_increase'] >= 5 && obj['percent_increase'] < 6) {
+                            counter45_5++;
+                        } else if(obj['percent_increase'] >= 6 && obj['percent_increase'] < 7) {
+                            counter45_6++;
+                        } else if(obj['percent_increase'] >= 7 && obj['percent_increase'] < 8) {
+                            counter45_7++;
+                        } else if(obj['percent_increase'] >= 8 && obj['percent_increase'] < 9) {
+                            counter45_8++;
+                        } else if(obj['percent_increase'] >= 9 && obj['percent_increase'] < 10) {
+                            counter45_9++;
+                        } else if(obj['percent_increase'] >= 10 && obj['percent_increase'] < 11) {
+                            counter45_10++;
+                        } else if(obj['percent_increase'] >= 11 && obj['percent_increase'] < 12) {
+                            counter45_11++;
+                        } else if(obj['percent_increase'] >= 12 && obj['percent_increase'] < 13) {
+                            counter45_12++;
+                        } else if(obj['percent_increase'] >= 13 && obj['percent_increase'] < 14) {
+                            counter45_13++;
+                        } else if(obj['percent_increase'] >= 14 && obj['percent_increase'] < 15) {
+                            counter45_14++;
+                        } else if(obj['percent_increase'] >= 15 && obj['percent_increase'] < 16) {
+                            counter45_15++;
+                        } else if(obj['percent_increase'] >= 16 && obj['percent_increase'] < 17) {
+                            counter45_16++;
+                        } else if(obj['percent_increase'] >= 17 && obj['percent_increase'] < 18) {
+                            counter45_17++;
+                        } else if(obj['percent_increase'] >= 18 && obj['percent_increase'] < 19) {
+                            counter45_18++;
+                        } else if(obj['percent_increase'] >= 19 && obj['percent_increase'] < 20) {
+                            counter45_19++;
+                        } else if(obj['percent_increase'] >= 20 && obj['percent_increase'] < 21) {
+                            counter45_20++;
+                        }
                     }
+
+
+
                     // =========== To be replaced in future =====================
                 }
 
@@ -719,6 +927,9 @@ io.on('connection', function(socket) {
                     {'time_interval':5, 'counter5_1':counter5_1, 'counter5_2':counter5_2, 'counter5_3':counter5_3, counter5_4:counter5_4, counter5_5:counter5_5, counter5_6:counter5_6, counter5_7:counter5_7, counter5_8:counter5_8, counter5_9:counter5_9, counter5_10:counter5_10, counter5_11:counter5_11, counter5_12:counter5_12, counter5_13:counter5_13, counter5_14:counter5_14, counter5_15:counter5_15, counter5_16:counter5_16, counter5_17:counter5_17, counter5_18:counter5_18, counter5_19:counter5_19, counter5_20:counter5_20},
                     {'time_interval':7, 'counter7_1':counter7_1, 'counter7_2':counter7_2, 'counter7_3':counter7_3, counter7_4:counter7_4, counter7_5:counter7_5, counter7_6:counter7_6, counter7_7:counter7_7, counter7_8:counter7_8, counter7_9:counter7_9, counter7_10:counter7_10, counter7_11:counter7_11, counter7_12:counter7_12, counter7_13:counter7_13, counter7_14:counter7_14, counter7_15:counter7_15, counter7_16:counter7_16, counter7_17:counter7_17, counter7_18:counter7_18, counter7_19:counter7_19, counter7_20:counter7_20},
                     {'time_interval':10, 'counter10_1':counter10_1, 'counter10_2':counter10_2, 'counter10_3':counter10_3, counter10_4:counter10_4, counter10_5:counter10_5, counter10_6:counter10_6, counter10_7:counter10_7, counter10_8:counter10_8, counter10_9:counter10_9, counter10_10:counter10_10, counter10_11:counter10_11, counter10_12:counter10_12, counter10_13:counter10_13, counter10_14:counter10_14, counter10_15:counter10_15, counter10_16:counter10_16, counter10_17:counter10_17, counter10_18:counter10_18, counter10_19:counter10_19, counter10_20:counter10_20},
+                    {'time_interval':15, 'counter15_1':counter15_1, 'counter15_2':counter15_2, 'counter15_3':counter15_3, counter15_4:counter15_4, counter15_5:counter15_5, counter15_6:counter15_6, counter15_7:counter15_7, counter15_8:counter15_8, counter15_9:counter15_9, counter15_10:counter15_10, counter15_11:counter15_11, counter15_12:counter15_12, counter15_13:counter15_13, counter15_14:counter15_14, counter15_15:counter15_15, counter15_16:counter15_16, counter15_17:counter15_17, counter15_18:counter15_18, counter15_19:counter15_19, counter15_20:counter15_20},
+                    {'time_interval':30, 'counter30_1':counter30_1, 'counter30_2':counter30_2, 'counter30_3':counter30_3, counter30_4:counter30_4, counter30_5:counter30_5, counter30_6:counter30_6, counter30_7:counter30_7, counter30_8:counter30_8, counter30_9:counter30_9, counter30_10:counter30_10, counter30_11:counter30_11, counter30_12:counter30_12, counter30_13:counter30_13, counter30_14:counter30_14, counter30_15:counter30_15, counter30_16:counter30_16, counter30_17:counter30_17, counter30_18:counter30_18, counter30_19:counter30_19, counter30_20:counter30_20},
+                    {'time_interval':45, 'counter45_1':counter45_1, 'counter45_2':counter45_2, 'counter45_3':counter45_3, counter45_4:counter45_4, counter45_5:counter45_5, counter45_6:counter45_6, counter45_7:counter45_7, counter45_8:counter45_8, counter45_9:counter45_9, counter45_10:counter45_10, counter45_11:counter45_11, counter45_12:counter45_12, counter45_13:counter45_13, counter45_14:counter45_14, counter45_15:counter45_15, counter45_16:counter45_16, counter45_17:counter45_17, counter45_18:counter45_18, counter45_19:counter45_19, counter45_20:counter45_20},
                     {'time_interval':60, 'counter60_1':counter60_1, 'counter60_2':counter60_2, 'counter60_3':counter60_3, counter60_4:counter60_4, counter60_5:counter60_5, counter60_6:counter60_6, counter60_7:counter60_7, counter60_8:counter60_8, counter60_9:counter60_9, counter60_10:counter60_10, counter60_11:counter60_11, counter60_12:counter60_12, counter60_13:counter60_13, counter60_14:counter60_14, counter60_15:counter60_15, counter60_16:counter60_16, counter60_17:counter60_17, counter60_18:counter60_18, counter60_19:counter60_19, counter60_20:counter60_20}
                 ];
                 //console.log(json_resp_data);
@@ -728,147 +939,10 @@ io.on('connection', function(socket) {
 
             }
         });
-
         //=============== fetch data from database query
-
         //io.emit('fetch_gain_chart_data', data);
     }
 
-
-
-
-    // Handle chat event
-    socket.on('chat', function(data){
-         //console.log(data);
-        io.sockets.emit('chat', data);
-    });
-
-    // Handle typing event
-    socket.on('typing', function(data){
-        socket.broadcast.emit('typing', data);
-    });
-
-    // =============== Private Chat ==============
-    // attach incoming listener for new user
-    socket.on("user_connected", function (username) {
-        // save in array
-        users[username] = socket.id;
-
-        // socket ID will be used to send message to individual person
-        // notify all connected clients
-        io.emit("user_connected", username);
-    });
-
-    // listen from client inside IO "connection" event
-    socket.on("send_message", function (data) {
-        // send event to receiver
-        var socketId = users[data.receiver];
-
-        io.to(socketId).emit("new_message", data);
-    });
-
-    // =============== Private Chat JJ Messenger ==============
-    // attach incoming listener for new user
-    socket.on("jjm_user_connected", function (username) {
-        // save in array
-        users[username] = socket.id;
-
-        // socket ID will be used to send message to individual person
-        // notify all connected clients
-        io.emit("jjm_user_connected", username);
-    });
-
-    // listen from client inside IO "connection" event
-    socket.on("jjm_send_message", function (data) {
-        // send event to receiver
-        var socketId = users[data.receiver];
-
-        //io.to(socketId).emit("jjm_new_message", data);
-        io.to(socketId).emit("jjm_new_message", formatMessageObject(data));
-
-        // insert data in DB
-        data.message_type = 0;  // set message_type - 0 is for private message and 1 is for group message
-        save_message_db(data);
-        // insert data in DB
-
-    });
-
-
-    // =============== Group Chat ==============
-    // attach incoming listener for new user
-    socket.on("user_connected_room", function (username) {
-        // save in array
-        users_room[username] = socket.id;
-
-        // socket ID will be used to send message to individual person
-        // notify all connected clients
-        io.emit("user_connected_room", username);
-    });
-
-    socket.on("joinRoom", function (user) {
-        const roomUser = userJoin(socket.id, user.username, user.room_name);
-        //console.log(user.username +' , '+user.room_name + ', '+roomUser.room_name);
-        socket.join(roomUser.room_name);
-
-
-        // Broadcast when a user connects
-        socket.broadcast
-            .to(roomUser.room_name)
-            .emit(
-                'joinMessage',
-                formatMessage(botName, `${roomUser.username} has joined the chat`)
-            );
-
-
-    });
-
-    socket.on("send_message_room", function (data) {
-        // send event to receiver
-        //var socketId = users_room[data.sender];
-        const roomUser = getCurrentUser(socket.id);
-        //io.to(data.room_name).emit("new_message_from_room", data);
-        console.log('Room: '+ roomUser.room_name + ' ____ SocketID = ' + socket.id + '_____ ' + roomUser.username +' _____ '+data.message);
-        io.to(roomUser.room_name).emit('message_from_room', formatMessage(roomUser.username, data.message) );
-    });
-
-    // Runs when client disconnects
-    socket.on('disconnect', function () {
-        const roomUser = userLeave(socket.id);
-
-        if (roomUser) {
-            io.to(roomUser.room_name).emit(
-                'leftGroupMessage',
-                formatMessage(botName, `${roomUser.username} has left the chat`)
-            );
-        }
-    });
-
-
-    // =============== Group Chat JJ Messenger ==============
-    socket.on("jjm_joinRoom", function (user) {
-        //const roomUser = userLeave(socket.id);
-        const roomUser = userJoin(socket.id, user.username, user.room_name);
-        //console.log('JOIN GROUP__________ socket: ' + socket.id + ', user:' + user.username +' , room: '+user.room_name + ', room: '+roomUser.room_name);
-        socket.join(roomUser.room_name);
-    });
-
-    socket.on("jjm_send_message_room", function (data) {
-        // send event to receiver
-        //var socketId = users_room[data.sender];
-        const roomUser = getCurrentUser(socket.id);
-        //io.to(data.room_name).emit("new_message_from_room", data);
-        //console.log('SEND MESSAGE TO A _____ Room: '+ roomUser.room_name + ' ____ SocketID = ' + socket.id + '_____ ' + roomUser.username +' _____ '+data.message);
-        io.to(roomUser.room_name).emit('jjm_message_from_room', formatMessageRoom(roomUser.room_name, roomUser.username, data.message, data.phone_no) );
-
-        // insert data in DB
-        data.message_type = 1;  // set message_type - 0 is for private message and 1 is for group message
-        save_message_db(data);
-        // insert data in DB
-
-
-    });
-
 });
-
 
 module.exports = app;

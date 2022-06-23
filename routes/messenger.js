@@ -108,6 +108,81 @@ router.get('/gain_chart', function (req, res, next)
     }
 });
 
+router.post('/get_detail_charts_data', function (req, res, next) {
+    req.getConnection(function (err, connection) {
+        // console.log(req.body.time_interval);
+
+        var time_interval = req.body.time_interval;
+        var percent_value = req.body.percent_value;
+        var percent_value_max = parseInt(parseInt(percent_value) + 1);
+        //console.log(time_interval +'___________'+ percent_value+'____________'+percent_value_max);
+
+        var query = " SELECT " +
+            " cry_fd.symbol, " +
+            " substring_index(group_concat(cry_fd.open order by id ASC), ',', 1) AS open, " +
+            " substring_index(group_concat(cry_fd.close order by id DESC), ',', 1) AS close, " +
+            " round((((substring_index(group_concat(cry_fd.close order by id DESC), ',', 1) - substring_index(group_concat(cry_fd.open order by id ASC), ',', 1)) / substring_index(group_concat(cry_fd.open order by id ASC), ',', 1)) * 100),6) AS percent_increase, " +
+            " "+ time_interval +" AS time_interval," +
+            " ( " +
+            " SELECT round((((substring_index(group_concat(crf1.close order by id DESC), ',', 1) - substring_index(group_concat(crf1.open order by id ASC), ',', 1)) / substring_index(group_concat(crf1.open order by id ASC), ',', 1)) * 100),6) " +
+            " FROM crypto_feed crf1 " +
+            " WHERE crf1.start_date >= NOW() - INTERVAL 60 MINUTE " +
+            " AND crf1.end_date <= NOW() " +
+            " AND crf1.symbol = cry_fd.symbol " +
+            " ) AS one_hr_gain, " +
+            " ( " +
+            " SELECT round((((substring_index(group_concat(crf2.close order by id DESC), ',', 1) - substring_index(group_concat(crf2.open order by id ASC), ',', 1)) / substring_index(group_concat(crf2.open order by id ASC), ',', 1)) * 100),6) " +
+            " FROM crypto_feed crf2 " +
+            " WHERE crf2.start_date >= NOW() - INTERVAL 30 MINUTE " +
+            " AND crf2.end_date <= NOW() " +
+            " AND crf2.symbol = cry_fd.symbol " +
+            " ) AS thirty_min_gain, " +
+            " ( " +
+            " SELECT round((((substring_index(group_concat(crf3.close order by id DESC), ',', 1) - substring_index(group_concat(crf3.open order by id ASC), ',', 1)) / substring_index(group_concat(crf3.open order by id ASC), ',', 1)) * 100),6) " +
+            " FROM crypto_feed crf3 " +
+            " WHERE crf3.start_date >= NOW() - INTERVAL 10 MINUTE " +
+            " AND crf3.end_date <= NOW() " +
+            " AND crf3.symbol = cry_fd.symbol " +
+            " ) AS ten_min_gain, " +
+            " ( " +
+            " SELECT round((((substring_index(group_concat(crf4.close order by id DESC), ',', 1) - substring_index(group_concat(crf4.open order by id ASC), ',', 1)) / substring_index(group_concat(crf4.open order by id ASC), ',', 1)) * 100),6) " +
+            " FROM crypto_feed crf4 " +
+            " WHERE crf4.start_date >= NOW() - INTERVAL 5 MINUTE " +
+            " AND crf4.end_date <= NOW() " +
+            " AND crf4.symbol = cry_fd.symbol " +
+            " ) AS five_min_gain, " +
+            " ( " +
+            " SELECT round((((substring_index(group_concat(crf5.close order by id DESC), ',', 1) - substring_index(group_concat(crf5.open order by id ASC), ',', 1)) / substring_index(group_concat(crf5.open order by id ASC), ',', 1)) * 100),6) " +
+            " FROM crypto_feed crf5 " +
+            " WHERE crf5.start_date >= NOW() - INTERVAL 2 MINUTE " +
+            " AND crf5.end_date <= NOW() " +
+            " AND crf5.symbol = cry_fd.symbol " +
+            " ) AS two_min_gain, " +
+            " ( " +
+            " SELECT round((((substring_index(group_concat(crf6.close order by id DESC), ',', 1) - substring_index(group_concat(crf6.open order by id ASC), ',', 1)) / substring_index(group_concat(crf6.open order by id ASC), ',', 1)) * 100),6) " +
+            " FROM crypto_feed crf6 " +
+            " WHERE crf6.start_date >= NOW() - INTERVAL 1 MINUTE " +
+            " AND crf6.end_date <= NOW() " +
+            " AND crf6.symbol = cry_fd.symbol " +
+            " ) AS one_min_gain " +
+            " FROM crypto_feed cry_fd " +
+            " WHERE cry_fd.start_date >= NOW() - INTERVAL "+ time_interval +" MINUTE " +
+            " AND cry_fd.end_date <= NOW() " +
+            " GROUP BY cry_fd.symbol " +
+            " HAVING percent_increase >= "+ percent_value +" AND percent_increase < "+ percent_value_max +" ";
+
+        connection.query(query, function (err, rows) {
+            if (rows.length) {
+                //console.log('here comes the previous chat');
+                //console.log(rows);
+
+                // response will be in JSON
+                res.end(JSON.stringify(rows));
+            }
+        });
+    });
+});
+
 
 router.get('/messenger', function (req, res, next)
 {
