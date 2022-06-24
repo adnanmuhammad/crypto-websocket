@@ -169,7 +169,7 @@ router.post('/get_detail_charts_data', function (req, res, next) {
             " WHERE cry_fd.start_date >= NOW() - INTERVAL "+ time_interval +" MINUTE " +
             " AND cry_fd.end_date <= NOW() " +
             " GROUP BY cry_fd.symbol " +
-            " HAVING percent_increase >= "+ percent_value +" AND percent_increase < "+ percent_value_max +" ";
+            " HAVING percent_increase >= "+ percent_value +" AND percent_increase < "+ percent_value_max +" ORDER BY percent_increase DESC ";
 
         connection.query(query, function (err, rows) {
             if (rows.length) {

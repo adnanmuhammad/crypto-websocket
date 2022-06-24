@@ -1,11 +1,11 @@
 var mysql_obj = require('mysql');
 
 var db_connection = mysql_obj.createConnection({
-    host     : '',
-    user     : '',
-    password : '',
+    host     : 'crypto-exchange.cvcoxaxglrwq.us-east-1.rds.amazonaws.com',
+    user     : 'admin',
+    password : 'sVEH0VWtkOgb7LjGc4A2',
     port: 3306, //port mysql
-    database : ''
+    database : 'cryptowebsocket'
 }, 'request');
 
 db_connection.connect(function(err) {
